@@ -81,3 +81,4 @@ gem 'fast-stemmer' # stem english words for reduced indexing : https://github.co
 gem 'loofah' # santitize and manipulate html : https://github.com/flavorjones/loofah
 gem 'figaro' # ENV configuration : https://github.com/laserlemon/figaro
 gem 'httparty' # make http requests : https://github.com/jnunemaker/httparty
+gem 'pg_search'

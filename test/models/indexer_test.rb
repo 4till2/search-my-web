@@ -5,11 +5,6 @@ class IndexerTest < ActiveSupport::TestCase
     @url = "http://www.example.com"
   end
 
-  def test_string_to_words
-    assert_equal %w[squawk hello world], Indexer.new.words_from('the squawk! Hello   World')
-  end
-
-
   test 'process one url' do
     indexer = Indexer.new
     assert indexer.process(@url)
@@ -33,5 +28,17 @@ class IndexerTest < ActiveSupport::TestCase
     assert_difference 'Word.count', 12 do
       indexer.process(@url)
     end
+  end
+
+  test 'dont process if already indexed' do
+    indexer = Indexer.new
+    assert indexer.process(@url)
+    assert_not indexer.process(@url)
+  end
+
+  test 'force processing' do
+    indexer = Indexer.new
+    assert indexer.process(@url)
+    assert indexer.process(@url, true)
   end
 end
