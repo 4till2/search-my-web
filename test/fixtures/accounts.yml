@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  nickname: one_nickname
+
+two:
+  user: two
+  nickname: two_nickname
+
+three:
+  user: three
+  nickname: random_nickname

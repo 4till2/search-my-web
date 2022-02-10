@@ -1,0 +1,27 @@
+<div id="<%= dom_id profile %>">
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Account:</strong>
+    <%= profile.account_id %>
+  </p>
+
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Title:</strong>
+    <%= profile.title %>
+  </p>
+
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Avatar:</strong>
+    <%= link_to profile.avatar.filename, profile.avatar if profile.avatar.attached? %>
+  </p>
+
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Bio:</strong>
+    <%= profile.bio %>
+  </p>
+
+  <% if action_name != "show" %>
+    <%= link_to "Show this profile", profile, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to 'Edit this profile', edit_profile_path(profile), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
+    <hr class="mt-6">
+  <% end %>
+</div>

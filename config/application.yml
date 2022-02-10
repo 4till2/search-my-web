@@ -1,0 +1,6 @@
+EXTRACT_USER: 'myweb'
+EXTRACT_SECRET: 'bigwebmeetssmallweb'
+EXTRACT_HOST: 'localhost'
+EXTRACT_PORT: '4000'
+FORCE_SSL: 'false'
+

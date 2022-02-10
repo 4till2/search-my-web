@@ -1,0 +1,10 @@
+one:
+  full_name: user_one
+  email: user_one@mail.com
+two:
+  full_name: user_two
+  email: user_two@mail.com
+three:
+  full_name: user_three
+  email: user_three@mail.com
+
