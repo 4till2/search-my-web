@@ -1,0 +1,25 @@
+<%= turbo_frame_tag 'results' do %>
+  <% query ||= nil && results ||= nil && recommendations ||= nil %>
+  <div class="mx-auto w-full grid">
+    <div class="grid w-full">
+      <% if results.present? %>
+        <% results.each do |result| %>
+          <div class="my-2 p-2 border-dotted border rounded">
+            <%= render result %>
+          </div>
+        <% end %>
+      <% elsif query.present? %>
+        <div class="m-auto p-12 text-gray-500 font-bold">No Results</div>
+      <% elsif recommendations.present? %>
+        <h1 class="font-bold text-lg text-gray-400 mt-8 text-center">Recommended for You</h1>
+        <% recommendations.each do |rec| %>
+          <div class="my-2 p-2 border-dotted border rounded">
+            <%= render rec, link: true %>
+            <%# end %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+

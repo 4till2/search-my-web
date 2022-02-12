@@ -11,17 +11,18 @@ class Indexer
   def add_to_index(url, force = false)
     print "\n- indexing #{url}"
     t0 = Time.now
-    page = Page.find(scrub(url))
+    page = Page.find_or_create(scrub(url))
 
     # if the page is not in the index, then index it
     if page.new_record?
-      h = page.hydrate
+      h = Hydration.new(page: page)
+      h.pour(page.url)
       doc = h&.content
       index(doc) do |doc_words|
         dsize = doc_words.size.to_f
         puts " [new] - (#{dsize.to_i} words)"
         doc_words.each_with_index do |w, l|
-          # printf("\r\e - %6.2f%", (l * 100 / dsize))
+          puts format("\r\e - %6.2f", (l * 100 / dsize))
           loc = Location.new(position: l)
           loc.word = Word.find_or_create_by(stem: w)
           loc.page = page
@@ -38,23 +39,21 @@ class Indexer
         puts " [refreshed] - (#{dsize.to_i} words)"
         page.locations.destroy
         doc_words.each_with_index do |w, l|
-          # printf("\r\e - %6.2f%", (l * 100 / dsize))
+          puts format("\r\e - %6.2f", (l * 100 / dsize))
           loc = Location.new(position: l)
           loc.word = Word.find_or_create_by(stem: w)
           loc.page = page
           loc.save
         end
       end
-
-      #otherwise just ignore it
     else
-      puts ' - (x) already indexed'
-      return false
+      puts "(x) already indexed - #{url}"
+      return { page: page, indexed: false, message: 'already indexed' }
     end
     t1 = Time.now
     puts format('  [%6.2f sec]', (t1 - t0))
-    page.save!
-    page
+    page.save
+    { page: page, indexed: false }
   end
 
   # do the common indexing work

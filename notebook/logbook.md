@@ -1,14 +1,20 @@
-## Extending core Ruby
-**String**
-1. add to lib/core_ext/string.rb
-2. initialize in config/initializers/core_ext.rb
-3. write test in test/core_ext_test.rb
-
-**Resources**
-[Lib](https://stackoverflow.com/a/5654580/16975830), 
-[Test](https://guides.rubyonrails.org/plugins.html#extending-core-classes)
-
-## Adding Postgresql Full Text Search
+# Using Turbo Stream
+The achitecture for the search bar is to update the stream of results below the search bar
+using Hotwire Turbo Streams. When an input is submitted the search controller replaces the content
+of the results container with the updated results. 
+# Be sure to pin javascript files
+With rails 7 importmaps is the way to make javascript files accessible.
+In my [search_bar_controller](../app/javascript/controllers/search_bar_controller.js) I import the `debounce` function to
+automatically submit the search after a period of pause from [utils.js](../app/javascript/utils.js). To make it available we must import
+it in [importmap.rb](../config/importmap.rb) by adding the following line.
+```ruby
+pin 'utils', preload: true
+```
+allowing us to then import from utils as expected...
+```ruby
+import {debounce} from "utils";
+```
+# Adding Postgresql Full Text Search
 I wasn't sure if I should use Postgresql full search or 
 another option. But it seemed the quickest way to get going and quite
 powerful. In addition the pg_search gem makes it trivial to configure.
@@ -71,3 +77,12 @@ end
 ```
 **Resources**
 [Guide](https://pganalyze.com/blog/full-text-search-ruby-rails-postgres)
+# Extending core Ruby
+**String**
+1. add to lib/core_ext/string.rb
+2. initialize in config/initializers/core_ext.rb
+3. write test in test/core_ext_test.rb
+
+**Resources**
+[Lib](https://stackoverflow.com/a/5654580/16975830),
+[Test](https://guides.rubyonrails.org/plugins.html#extending-core-classes)

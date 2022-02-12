@@ -6,6 +6,8 @@ class Finder
   # convert query to word stems -> get all locations matching word stems ->
   # get list of sorted page ids according their frequency in list of locations -> get pages -> order pages
   def search(query)
+    return unless query
+
     words = words(query)
     locations = locations(words)
     return unless locations

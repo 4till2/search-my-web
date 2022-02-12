@@ -17,7 +17,7 @@ class IndexerTest < ActiveSupport::TestCase
 
   test 'process one url with hydration' do
     indexer = Indexer.new
-    page = indexer.process(@url)
+    page = indexer.process(@url)[:page]
     assert page
     assert page.hydration
     assert page.hydration.content.present?
@@ -33,7 +33,9 @@ class IndexerTest < ActiveSupport::TestCase
   test 'dont process if already indexed' do
     indexer = Indexer.new
     assert indexer.process(@url)
-    assert_not indexer.process(@url)
+    i = indexer.process(@url)
+    assert i
+    assert_not i[:indexed]
   end
 
   test 'force processing' do

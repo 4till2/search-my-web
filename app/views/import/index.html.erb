@@ -1,0 +1,11 @@
+<div data-controller="import">
+  <input type="file" data-action="change->import#readFile">
+
+  <%= form_with(url: import_path, class: "mx-auto w-full md:px-24", id: 'import-form', data: { 'import-target': 'form' }) do |form| %>
+    <%= form.submit 'Enter' %>
+  <% end %>
+
+  <%= render 'import/results' %>
+
+
+</div>

@@ -90,7 +90,7 @@ module Services
     private
 
     def result
-      @result ||= HTTParty.get(service_url)
+      @result ||= HTTParty.get(service_url) # TODO: Handle timeout
     end
 
     def marshal_dump

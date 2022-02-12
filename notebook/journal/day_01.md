@@ -46,7 +46,7 @@ Page's content for any links to add to the list for next round. As is the Spider
 one list of links per call, resulting in a new list of links. It's trivial to set it to crawl automatically but given that
 the point right now is to visit known sites, I will leave the crawler simple for the time being.
 
-### Views
+## Views
 As of now just the views for registration and sessions are implemented, again borrowing from previous projects.
 I dont quite have an interface in mind yet and won't consider it until the primary backend is complete. I typically like
 to build back to front, feature by feature, however with the primary complexity being so highly backend dependent I am keeping the entirety of my focus there first.

@@ -10,7 +10,7 @@ class Page < ApplicationRecord
 
   after_create_commit :build_associated
 
-  def self.find(url)
+  def self.find_or_create(url)
     page = find_by(url: url)
     page = new(url: url) if page.nil?
     page
@@ -32,8 +32,10 @@ class Page < ApplicationRecord
   def hydrate
     if hydration.present?
       hydration.refresh
+    elsif id
+      self.hydration = Hydration.create(page: self)
     else
-      self.hydration = Hydration.create!(page: self)
+      raise StandardError, 'Save page before hydrating.'
     end
   end
 

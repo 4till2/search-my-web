@@ -1,11 +1,11 @@
 class Hydration < ApplicationRecord
   belongs_to :page
-  after_create :pour
+  after_create :refresh
 
-  def pour
-    return unless page.url.present?
+  def pour(url)
+    return unless url.present?
 
-    p = Services::PageParser.new(page.url)
+    p = Services::PageParser.new(url)
     self.title = p.title
     self.summary = p.summary
     self.author = p.author
@@ -16,11 +16,11 @@ class Hydration < ApplicationRecord
     self.excerpt = p.excerpt
     self.word_count = p.word_count
     self.direction = p.direction
-    save!
   end
 
   def refresh
-    pour
+    pour page&.url
+    save
   end
 
 end

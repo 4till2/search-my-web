@@ -3,15 +3,10 @@ Rails.application.routes.draw do
   resources :accounts
   devise_for :users
 
+  get 'search', to: 'search#new', as: 'new_search'
+  post 'search', to: 'search#do', as: 'search'
+  get 'import', to: 'import#index', as: 'new_import'
+  post 'import', to: 'import#do', as: 'import'
   root 'home#index'
 
-  # get 'signup', to: 'registrations#new'
-  # post 'signup', to: 'registrations#create'
-  # get 'login', to: 'sessions#new'
-  # post 'login', to: 'sessions#create'
-  # delete 'logout', to: 'sessions#destroy'
-  # get 'password', to: 'passwords#edit', as: 'edit_password'
-  # patch 'password', to: 'passwords#update'
-
-  # resources :users, except: [:index, :new, :create]
 end

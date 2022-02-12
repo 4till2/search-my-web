@@ -1,0 +1,32 @@
+<%= turbo_frame_tag 'results' do %>
+  <% results ||= nil && failures ||= nil && errors ||= nil %>
+  <div class="mx-auto w-full grid">
+    <div class="grid w-full">
+      <% if results.present? %>
+        <h1 class="font-bold text-lg text-gray-400 mt-8 text-center">RESULTS</h1>
+        <% results.each do |result| %>
+          <div class="my-2 p-2 border-dotted border rounded">
+            <%= result %>
+          </div>
+        <% end %>
+      <% end %>
+      <% if failures.present? %>
+        <h1 class="font-bold text-lg text-gray-400 mt-8 text-center">FAILURES</h1>
+        <% failures.each do |failure| %>
+          <div class="my-2 p-2 border-dotted border rounded">
+            <%= failure %>
+          </div>
+        <% end %>
+      <% end %>
+      <% if errors.present? %>
+        <h1 class="font-bold text-lg text-gray-400 mt-8 text-center">ERRORS</h1>
+        <% errors.each do |err| %>
+          <div class="my-2 p-2 border-dotted border rounded">
+            <%= err %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+

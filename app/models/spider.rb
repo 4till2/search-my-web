@@ -16,7 +16,7 @@ class Spider
         next unless page_url.valid_url?
 
         begin
-          page = Indexer.new.process(page_url)
+          page = Indexer.new.process(page_url)[:page]
           if page.present?
             uri = URI.parse(page_url)
             host = "#{uri.scheme}://#{uri.host}"

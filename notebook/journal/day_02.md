@@ -12,7 +12,7 @@ Note: There are now 104 test assertions and its beginning to slow down.
 I'll likely need to start using test fixtures.
 
 ## Models
-### Finder
+#### Finder
 **Search Algorithm**
 
 I implemented a somewhat naive algorithm that gets the job done. It works as follows:
