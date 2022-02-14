@@ -304,6 +304,39 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: sources; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sources (
+    id bigint NOT NULL,
+    account_id bigint NOT NULL,
+    page_id bigint NOT NULL,
+    status integer DEFAULT 1,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: sources_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.sources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.sources_id_seq OWNED BY public.sources.id;
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -428,6 +461,13 @@ ALTER TABLE ONLY public.profiles ALTER COLUMN id SET DEFAULT nextval('public.pro
 
 
 --
+-- Name: sources id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sources ALTER COLUMN id SET DEFAULT nextval('public.sources_id_seq'::regclass);
+
+
+--
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -519,6 +559,14 @@ ALTER TABLE ONLY public.profiles
 
 ALTER TABLE ONLY public.schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: sources sources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sources
+    ADD CONSTRAINT sources_pkey PRIMARY KEY (id);
 
 
 --
@@ -615,6 +663,20 @@ CREATE INDEX index_profiles_on_account_id ON public.profiles USING btree (accoun
 
 
 --
+-- Name: index_sources_on_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sources_on_account_id ON public.sources USING btree (account_id);
+
+
+--
+-- Name: index_sources_on_page_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sources_on_page_id ON public.sources USING btree (page_id);
+
+
+--
 -- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -668,6 +730,14 @@ ALTER TABLE ONLY public.active_storage_variant_records
 
 
 --
+-- Name: sources fk_rails_a23e831c14; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sources
+    ADD CONSTRAINT fk_rails_a23e831c14 FOREIGN KEY (account_id) REFERENCES public.accounts(id);
+
+
+--
 -- Name: accounts fk_rails_b1e30bebc8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -681,6 +751,14 @@ ALTER TABLE ONLY public.accounts
 
 ALTER TABLE ONLY public.active_storage_attachments
     ADD CONSTRAINT fk_rails_c3b3935057 FOREIGN KEY (blob_id) REFERENCES public.active_storage_blobs(id);
+
+
+--
+-- Name: sources fk_rails_edb3ed3b7d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sources
+    ADD CONSTRAINT fk_rails_edb3ed3b7d FOREIGN KEY (page_id) REFERENCES public.pages(id);
 
 
 --
@@ -707,6 +785,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220209190935'),
 ('20220209195657'),
 ('20220210165926'),
-('20220210170155');
+('20220210170155'),
+('20220214143944');
 
 

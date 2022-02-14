@@ -2,21 +2,22 @@ class Importer
   FAILED = 'failed'.freeze
   READY = 'ready'.freeze
   COMPLETE = 'complete'.freeze
-  attr_accessor :urls, :errors
+  attr_accessor :urls, :errors, :pages
 
   # @param data : Can be nearly any data type and importer will try to find some urls. Base case is a String. Arrays of multiple data types are supported.
   # @example data = ['https://example.com', ['https://example.com','https://example.com'], HTML_FILE]
   # (File is not yet supported on the backend, but the front end handles conversion of HTML files)
   def initialize(data = nil)
     @urls = []
+    @pages = []
     @errors = []
     process_data(data) unless data.nil?
   end
 
   def run
-    result = index_urls
-    puts result
-    result
+    benchmark = index_urls
+    puts benchmark
+    benchmark
   end
 
   def process_data(data)
@@ -59,7 +60,10 @@ class Importer
     indexer = Indexer.new
     time = benchmark do
       ready.each do |l|
-        l[:status] = indexer.process(l[:url]) ? COMPLETE : FAILED
+        result = indexer.process(l[:url])
+        l[:status] = result[:page].present? ? COMPLETE : FAILED
+        @pages << result[:page] if result[:page].present?
+        @errors << { error: result[:errors], node: l }
       end
     end
     { attempts: total, run_time: time }

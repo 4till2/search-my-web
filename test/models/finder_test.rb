@@ -25,6 +25,12 @@ class FinderTest < ActiveSupport::TestCase
     assert @finder.locations(@finder.words(@string)).present?
   end
 
+  test 'filter scoped to account' do
+    assert_not @finder.filter([locations(:two)], accounts(:one)).present?
+    assert @finder.filter([locations(:one)], accounts(:one)).present?
+    assert_equal @finder.filter([locations(:two), locations(:one)], accounts(:one)).count, 1
+  end
+
   test 'ranks' do
     assert_not @finder.ranks(@finder.locations(@finder.words(@string))).present?
 

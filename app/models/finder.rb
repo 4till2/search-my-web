@@ -5,14 +5,16 @@ class Finder
   #
   # convert query to word stems -> get all locations matching word stems ->
   # get list of sorted page ids according their frequency in list of locations -> get pages -> order pages
-  def search(query)
+  def search(query, account = nil)
     return unless query
 
     words = words(query)
     locations = locations(words)
     return unless locations
 
-    ranked_ids = ranks(locations, true)
+    filtered_locations = filter(locations, account)
+
+    ranked_ids = ranks(filtered_locations, true)
     pages = pages(ranked_ids)
     sort_pages_by_ranks(pages, ranked_ids)
   end
@@ -24,6 +26,13 @@ class Finder
 
   def locations(words)
     words&.map(&:locations)&.first
+  end
+
+  def filter(locations, account)
+    return locations unless account
+
+    sources = account.sources.trusted.map(&:page)
+    locations.filter { |l| sources.include?(l.page) }
   end
 
   def ranks(locations, ids_only = false)

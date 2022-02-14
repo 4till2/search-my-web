@@ -1,6 +1,8 @@
 class Account < ApplicationRecord
   belongs_to :user
   has_one :profile, dependent: :destroy
+  has_many :sources
+
   after_create_commit :build_associated
 
   validates_uniqueness_of :user_id

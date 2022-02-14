@@ -8,7 +8,7 @@ class SearchController < ApplicationController
   def do
     # user = user_signed_in? ? current_user : User.new
     q = params[:query]
-    results = Finder.new.search(q)
+    results = Finder.new.search(q, current_account)
     recommendations = nil
     render turbo_stream: turbo_stream.replace('results', partial: 'search/results', locals: { results: results, query: q, recommendations: recommendations })
   end

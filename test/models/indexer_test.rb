@@ -1,8 +1,8 @@
-require "test_helper"
+require 'test_helper'
 
 class IndexerTest < ActiveSupport::TestCase
   setup do
-    @url = "http://www.example.com"
+    @url = 'http://www.example.com'
   end
 
   test 'process one url' do
@@ -12,7 +12,7 @@ class IndexerTest < ActiveSupport::TestCase
 
   test 'fail gracefully for invalid url' do
     indexer = Indexer.new
-    assert_not indexer.process('invalidurl.com')
+    assert_equal indexer.process('invalidurl.com')[:error], true
   end
 
   test 'process one url with hydration' do

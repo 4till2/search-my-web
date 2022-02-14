@@ -2,7 +2,7 @@ class Indexer
   include LinkHelpers
 
   def process(page_url, force = false)
-    return unless page_url.valid_url?
+    return { error: true, page: nil, indexed: false, message: 'invalid url' } unless page_url.valid_url?
 
     add_to_index page_url, force
   end
@@ -53,7 +53,7 @@ class Indexer
     t1 = Time.now
     puts format('  [%6.2f sec]', (t1 - t0))
     page.save
-    { page: page, indexed: false }
+    { page: page, indexed: true }
   end
 
   # do the common indexing work
