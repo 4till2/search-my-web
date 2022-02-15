@@ -4,7 +4,7 @@ class Page < ApplicationRecord
   has_one :hydration, dependent: :destroy
   has_many :locations, dependent: :destroy
   has_many :words, through: :locations
-
+  has_many :sources, dependent: :destroy
   validates :url, presence: true
   validates :url, url: true
 

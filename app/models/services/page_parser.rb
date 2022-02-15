@@ -90,7 +90,12 @@ module Services
     private
 
     def result
-      @result ||= HTTParty.get(service_url) # TODO: Handle timeout
+      @result ||= begin
+                    HTTParty.get(service_url) # TODO: Handle timeout
+                  rescue Errno::ECONNREFUSED
+                    raise 'Extract service not connected'
+                  end
+
     end
 
     def marshal_dump
@@ -106,6 +111,7 @@ module Services
       @result = data["result"]
       @url = data["url"]
     end
+
   end
 
 end

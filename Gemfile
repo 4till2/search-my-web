@@ -82,3 +82,5 @@ gem 'loofah' # santitize and manipulate html : https://github.com/flavorjones/lo
 gem 'figaro' # ENV configuration : https://github.com/laserlemon/figaro
 gem 'httparty' # make http requests : https://github.com/jnunemaker/httparty
 gem 'pg_search'
+gem 'sidekiq', '>= 6.4.1'
+gem 'sidekiq-batch'

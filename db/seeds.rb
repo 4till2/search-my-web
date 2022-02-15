@@ -1,0 +1,1 @@
+@user = User.create! email: "#{SecureRandom.alphanumeric(10)}@mail.com", password: 'asdfasdf', password_confirmation: 'asdfasdf', account_attributes: { nickname: SecureRandom.alphanumeric(10) }

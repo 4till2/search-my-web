@@ -5,10 +5,6 @@ class ImporterTest < ActiveSupport::TestCase
     @url = 'http://www.example.com'
   end
 
-  test 'create importer' do
-    assert Importer.new
-  end
-
   test 'create importer with data' do
     i = Importer.new(@url)
     assert_equal i.urls, [{ url: @url, status: 'ready' }]
@@ -27,6 +23,11 @@ class ImporterTest < ActiveSupport::TestCase
     assert_difference 'i.urls.filter { |e| e[:status] == "complete" }.count' do
       i.run
     end
+  end
+
+  test 'run async' do
+    assert Importer.process([@url, 'invalidurl'])
+    assert Importer.process([@url, 'invalidurl'], accounts(:one))
   end
 
 end

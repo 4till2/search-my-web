@@ -7,17 +7,20 @@ class Importer
   # @param data : Can be nearly any data type and importer will try to find some urls. Base case is a String. Arrays of multiple data types are supported.
   # @example data = ['https://example.com', ['https://example.com','https://example.com'], HTML_FILE]
   # (File is not yet supported on the backend, but the front end handles conversion of HTML files)
-  def initialize(data = nil)
+  def initialize(data, account = nil)
+    @account = account
     @urls = []
     @pages = []
     @errors = []
     process_data(data) unless data.nil?
   end
 
+  def self.process(data, account = nil)
+    Importer.new(data, account).run
+  end
+
   def run
-    benchmark = index_urls
-    puts benchmark
-    benchmark
+    index_urls
   end
 
   def process_data(data)
@@ -56,23 +59,9 @@ class Importer
   private
 
   def index_urls
-    total = 0
-    indexer = Indexer.new
-    time = benchmark do
-      ready.each do |l|
-        result = indexer.process(l[:url])
-        l[:status] = result[:page].present? ? COMPLETE : FAILED
-        @pages << result[:page] if result[:page].present?
-        @errors << { error: result[:errors], node: l }
-      end
+    ready.each do |item|
+      IndexJob.perform_async(item[:url], @account&.id)
+      item[:status] = COMPLETE
     end
-    { attempts: total, run_time: time }
-  end
-
-  def benchmark
-    t0 = Time.now
-    yield
-    t1 = Time.now
-    format('%6.2f', (t1 - t0))
   end
 end

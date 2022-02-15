@@ -22,7 +22,6 @@ class User < ApplicationRecord
   accepts_nested_attributes_for :account
 
   validates :email, presence: true, uniqueness: true, format: { with: /\A[^@\s]+@[^@\s]+\z/, message: 'Invalid email' }
-  validates_uniqueness_of :email
   validates :password, presence: true, format: { with: LENIENT_PASSWORD_FORMAT }
   validates_comparison_of :password, equal_to: :password_confirmation, message: 'confirmation incorrect'
   validates :account, presence: { value: true, message: 'nickname missing' }

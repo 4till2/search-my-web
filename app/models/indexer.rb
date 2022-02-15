@@ -1,7 +1,7 @@
 class Indexer
   include LinkHelpers
 
-  def process(page_url, force = false)
+  def process(page_url, force: false)
     return { error: true, page: nil, indexed: false, message: 'invalid url' } unless page_url.valid_url?
 
     add_to_index page_url, force

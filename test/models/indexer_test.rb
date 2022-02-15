@@ -41,6 +41,6 @@ class IndexerTest < ActiveSupport::TestCase
   test 'force processing' do
     indexer = Indexer.new
     assert indexer.process(@url)
-    assert indexer.process(@url, true)
+    assert indexer.process(@url, force: true)
   end
 end
