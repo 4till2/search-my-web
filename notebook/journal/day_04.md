@@ -7,3 +7,6 @@ indexing is complete the job will create a new `source` with and if an account_i
 
 Search is also now scoped to "trusted" sources by default. Next steps are to create views, improved search, and improved
 indexing.
+
+## Notes
+- I'm a bit lazy today to write a journal entry but I'll do my best to return to it.

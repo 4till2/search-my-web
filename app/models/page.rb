@@ -6,9 +6,9 @@ class Page < ApplicationRecord
   has_many :words, through: :locations
   has_many :sources, dependent: :destroy
   validates :url, presence: true
-  validates :url, url: true
+  validates_uniqueness_of :url
 
-  after_create_commit :build_associated
+  # after_create_commit :build_associated
 
   def self.find_or_create(url)
     page = find_by(url: url)
@@ -22,11 +22,13 @@ class Page < ApplicationRecord
   end
 
   def age
-    (Time.now - updated_at.to_time) / 60
+    return nil unless last_indexed
+
+    (Time.now - last_indexed&.to_time) / 60
   end
 
   def fresh?
-    age <= FRESHNESS_POLICY
+    age && age <= FRESHNESS_POLICY
   end
 
   def hydrate

@@ -22,7 +22,7 @@ helper functions, useful to give feedback to the user.
 #### Importer, Search
 The view for import accepts an Html file and extracts all links within a href before rendering those on the page for submission.
 It's rudimentary, yet functional for testing. I'm using some awesome features of Hotwire to rather easily handle the above. Most 
-notable is the [import_controller](../../app/javascript/controllers/import_controller.js) which using [importer.js](../../app/javascript/importer.js) handles the reading, parsing, and rendering 
+notable is the [import_controller](../../app/javascript/controllers/import_controller.js) which using [importer.js](../../app/javascript/utils/importer.js) handles the reading, parsing, and rendering 
 of the uploaded html file. It's in no way robust and only the beginnings of what will need further development even for beta. Doing some work client side 
 will be good when allowing users to upload from arbitrary sources, enabling them to work with the urls before being uploaded. 
 

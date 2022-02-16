@@ -1,0 +1,8 @@
+<% default ||= nil %>
+<div class="mx-auto w-full grid">
+  <div class="bg-white overflow-hidden sm:rounded-md">
+    <ul role="list" class="divide-y divide-gray-200">
+      <%= render 'search/results', results: default %>
+    </ul>
+  </div>
+</div>

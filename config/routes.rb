@@ -6,11 +6,12 @@ Rails.application.routes.draw do
   devise_for :users
 
   get 'sources', to: 'sources#index', as: 'sources'
-  get 'search', to: 'search#new', as: 'new_search'
+  get 'search', to: 'search#index', as: 'new_search'
   post 'search', to: 'search#do', as: 'search'
   get 'import', to: 'import#index', as: 'new_import'
   post 'import', to: 'import#do', as: 'import'
-  root 'home#index'
+
+  root 'search#index'
 
   mount Sidekiq::Web => '/sidekiq'
 

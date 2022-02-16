@@ -1,0 +1,16 @@
+<div data-controller="toggle-class"
+     data-toggle-class-auto-value="4000"
+     data-toggle-class-toggle-class="hidden"
+     data-toggle-class-target="toggleable"
+     data-transition-leave="transition-opacity ease-linear duration-500"
+     data-transition-leave-start="opacity-100"
+     data-transition-leave-end="opacity-0"
+     class="flex absolute mx-auto p-3 rounded text-center <%= type == 'notice' ? 'bg-indigo-300' : 'bg-gray-100' %>">
+  <%= msg %>
+  <button type="button" data-action="click->toggle-class#toggle" class=" ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+    <span class="sr-only">Close sidebar</span>
+    <svg class="h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+    </svg>
+  </button>
+</div>

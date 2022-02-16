@@ -1,6 +1,30 @@
-<%= turbo_frame_tag 'sources' do %>
-
-  <div>
-    <%= render partial: "sources/source", collection: @sources %>
+<div>
+  <%= render 'search/searchbar', placeholder: 'Search sources', preload: true %>
+  <div data-controller="import" class="">
+    <input type="file" data-action="change->import#readFile" data-import-target="fileInput" hidden>
+    <%= form_with(url: import_path, class: "mx-auto w-full p-4", id: 'import-form', data: { 'import-target': 'form' }) do |form| %>
+      <div class="block mt-2 w-full">
+        <div class="flex w-full">
+          <%= form.text_area :urls, data: { 'import-target': 'textInput' },
+                             placeholder: "Add urls seperated by a new line or comma",
+                             class: "block resize-none flex-grow bg-gray-100
+                             text-lg text-gray-700 rounded-md shadow border-none  outline-none
+                             focus:outline-none focus:ring-1 px-3 py-4 w-full text-xs" %>
+          <div class="grid justify-center p-2">
+            <div data-action="click->import#importFile" class="text-gray-500 text-sm mb-2 hover:text-gray-900 cursor-pointer">Import
+            </div>
+            <%= form.submit 'Submit', class: 'text-indigo-700 p-2 shadow rounded bg-indigo-100 cursor-pointer hover:bg-indigo-500 hover:text-white' %>
+          </div>
+        </div>
+      </div>
+    <% end %>
   </div>
-<% end %>
+
+
+  <%= turbo_frame_tag 'sources' do %>
+    <div class="mt-4">
+      <%= render "search/results_container", default: @results %>
+    </div>
+
+  <% end %>
+</div>

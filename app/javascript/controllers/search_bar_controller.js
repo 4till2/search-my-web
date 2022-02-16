@@ -1,5 +1,5 @@
 import {Controller} from "@hotwired/stimulus"
-import {debounce} from "utils";
+import {debounce} from "utils/debounce";
 
 export default class extends Controller {
     static get targets() {

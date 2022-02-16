@@ -52,6 +52,7 @@ class Indexer
     end
     t1 = Time.now
     puts format('  [%6.2f sec]', (t1 - t0))
+    page.last_indexed = DateTime.now
     page.save
     { page: page, indexed: true }
   end

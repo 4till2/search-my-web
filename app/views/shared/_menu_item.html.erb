@@ -1,0 +1,24 @@
+<% text = case page
+          when '/'
+            'Home'
+          when '/sources'
+            'Sources'
+          else
+            ''
+          end
+%>
+<% icon = case page
+          when '/'
+            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />'
+          when '/sources'
+            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />'
+          else
+            ''
+          end
+%>
+<%= link_to page, class: "#{current_page?(page) ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'} group flex items-center px-2 py-2 text-base font-medium rounded-md" do %>
+  <svg class="<%= current_page? == page ? 'text-gray-500' : 'text-gray-400 group-hover:text-gray-500' %> mr-4 flex-shrink-0 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+    <%= icon.html_safe %>
+  </svg>
+  <%= text %>
+<% end %>

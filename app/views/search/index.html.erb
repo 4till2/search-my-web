@@ -1,15 +1,7 @@
-<div class="w-full" data-controller="search-bar">
-  <%= form_with url: search_path, data: { 'search-bar-target': 'form' } do |form| %>
-    <div class="w-full flex items-center">
-      <%= form.text_field :query,
-                          data: { 'search-bar-target': 'input' },
-                          placeholder: 'Search',
-                          value: @query,
-                          autofocus: true,
-                          class: 'w-full grow border-gray-400 rounded p-4 outline-none focus:outline-none focus:ring-0 focus:border-gray-400'
-      %>
-      <div data-action="click->search-bar#reset" class="ml-4 cursor-pointer text-gray-500">Clear</div>
-    </div>
-  <% end %>
-  <%= render 'search/results' %>
+<div class="inline-flex h-full w-full">
+  <div class="w-full">
+    <%= render 'search/searchbar', placeholder: 'Search', preload: false %>
+    <%= render 'search/results_container' %>
+  </div>
+
 </div>

@@ -237,6 +237,7 @@ ALTER SEQUENCE public.locations_id_seq OWNED BY public.locations.id;
 CREATE TABLE public.pages (
     id bigint NOT NULL,
     url character varying,
+    last_indexed timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
