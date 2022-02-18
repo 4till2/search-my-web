@@ -31,7 +31,7 @@ class Finder
   def filter(locations, account)
     return locations unless account
 
-    sources = account.sources.trusted.map(&:page)
+    sources = account.sources.pages.trusted.map(&:sourceable)
     locations.filter { |l| sources.include?(l.page) }
   end
 

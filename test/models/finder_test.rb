@@ -26,6 +26,7 @@ class FinderTest < ActiveSupport::TestCase
   end
 
   test 'filter scoped to account' do
+    assert Source.create(account: accounts(:one), sourceable: pages(:two))
     assert_not @finder.filter([locations(:two)], accounts(:one)).present?
     assert @finder.filter([locations(:one)], accounts(:one)).present?
     assert_equal @finder.filter([locations(:two), locations(:one)], accounts(:one)).count, 1

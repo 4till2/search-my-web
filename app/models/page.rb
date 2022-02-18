@@ -18,6 +18,9 @@ class Page < ApplicationRecord
   has_many :destination_pages, through: :links_as_origin, class_name: 'Page', source: 'destination'
 
   validates :url, presence: true
+  validate do
+    errors.add(:base, 'Url is invalid') unless url.valid_url?
+  end
   validates_uniqueness_of :url
 
   def self.find_or_create(url)

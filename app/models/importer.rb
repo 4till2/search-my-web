@@ -4,7 +4,7 @@ class Importer
   COMPLETE = 'complete'.freeze
   attr_accessor :urls, :errors, :pages
 
-  # @param data : Can be nearly any data type and importer will try to find some urls. Base case is a String. Arrays of multiple data types are supported.
+  # @param data : todo: Can be nearly any data type and importer will try to find some urls. Base case is a String. Arrays of multiple data types are supported.
   # @example data = ['https://example.com', ['https://example.com','https://example.com'], HTML_FILE]
   # (File is not yet supported on the backend, but the front end handles conversion of HTML files)
   def initialize(data, account = nil)

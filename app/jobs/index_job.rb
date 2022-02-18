@@ -4,6 +4,6 @@ class IndexJob
 
   def perform(url, account_id)
     index = Indexer.new.process(url)
-    Source.add(index[:page].id, account_id) if account_id && index[:page]
+    Source.create(account_id: account_id, sourceable: index[:page]) if account_id && index[:page]
   end
 end
