@@ -1,6 +1,6 @@
 require "test_helper"
 
-class SourceTest < ActiveSupport::TestCase
+class LinkTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

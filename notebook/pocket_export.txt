@@ -1,4 +1,3 @@
-[
   "https://www.themealdb.com/faq.php",
   "https://dokku.com/",
   "https://johnnyrodgers.is/building-a-modern-home",
@@ -37,4 +36,3 @@
   "http://cdn.cs50.net/2016/x/psets/1/pset1/pset1.html",
   "http://waitbutwhy.com/2014/05/fermi-paradox.html",
   "https://www.reddit.com/"
-]

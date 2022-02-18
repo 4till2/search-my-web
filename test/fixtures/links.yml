@@ -5,5 +5,5 @@
 # below each fixture, per the syntax in the comments below
 #
 one:
-  account: one
-  sourceable: pages(one)
+  origin: one
+  destination: two

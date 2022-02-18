@@ -14,6 +14,39 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: account_sources; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.account_sources (
+    id bigint NOT NULL,
+    account_id bigint NOT NULL,
+    source_id bigint NOT NULL,
+    rank integer DEFAULT 1,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: account_sources_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.account_sources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: account_sources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.account_sources_id_seq OWNED BY public.account_sources.id;
+
+
+--
 -- Name: accounts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -162,6 +195,7 @@ CREATE TABLE public.ar_internal_metadata (
 
 CREATE TABLE public.hydrations (
     id bigint NOT NULL,
+    page_id bigint NOT NULL,
     title character varying,
     summary text,
     author character varying,
@@ -172,7 +206,6 @@ CREATE TABLE public.hydrations (
     excerpt text,
     word_count integer,
     direction character varying,
-    page_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -195,6 +228,38 @@ CREATE SEQUENCE public.hydrations_id_seq
 --
 
 ALTER SEQUENCE public.hydrations_id_seq OWNED BY public.hydrations.id;
+
+
+--
+-- Name: links; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.links (
+    id bigint NOT NULL,
+    origin_id bigint NOT NULL,
+    destination_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: links_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.links_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: links_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.links_id_seq OWNED BY public.links.id;
 
 
 --
@@ -231,6 +296,39 @@ ALTER SEQUENCE public.locations_id_seq OWNED BY public.locations.id;
 
 
 --
+-- Name: page_sources; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.page_sources (
+    id bigint NOT NULL,
+    account_id bigint NOT NULL,
+    source_id bigint NOT NULL,
+    rank integer DEFAULT 1,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: page_sources_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.page_sources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: page_sources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.page_sources_id_seq OWNED BY public.page_sources.id;
+
+
+--
 -- Name: pages; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -238,6 +336,7 @@ CREATE TABLE public.pages (
     id bigint NOT NULL,
     url character varying,
     last_indexed timestamp(6) without time zone,
+    rank integer DEFAULT 1,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -311,8 +410,9 @@ CREATE TABLE public.schema_migrations (
 CREATE TABLE public.sources (
     id bigint NOT NULL,
     account_id bigint NOT NULL,
-    page_id bigint NOT NULL,
-    status integer DEFAULT 1,
+    sourceable_type character varying NOT NULL,
+    sourceable_id bigint NOT NULL,
+    rank integer DEFAULT 1,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -406,6 +506,13 @@ ALTER SEQUENCE public.words_id_seq OWNED BY public.words.id;
 
 
 --
+-- Name: account_sources id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account_sources ALTER COLUMN id SET DEFAULT nextval('public.account_sources_id_seq'::regclass);
+
+
+--
 -- Name: accounts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -441,10 +548,24 @@ ALTER TABLE ONLY public.hydrations ALTER COLUMN id SET DEFAULT nextval('public.h
 
 
 --
+-- Name: links id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.links ALTER COLUMN id SET DEFAULT nextval('public.links_id_seq'::regclass);
+
+
+--
 -- Name: locations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.locations ALTER COLUMN id SET DEFAULT nextval('public.locations_id_seq'::regclass);
+
+
+--
+-- Name: page_sources id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.page_sources ALTER COLUMN id SET DEFAULT nextval('public.page_sources_id_seq'::regclass);
 
 
 --
@@ -480,6 +601,14 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 --
 
 ALTER TABLE ONLY public.words ALTER COLUMN id SET DEFAULT nextval('public.words_id_seq'::regclass);
+
+
+--
+-- Name: account_sources account_sources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account_sources
+    ADD CONSTRAINT account_sources_pkey PRIMARY KEY (id);
 
 
 --
@@ -531,11 +660,27 @@ ALTER TABLE ONLY public.hydrations
 
 
 --
+-- Name: links links_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.links
+    ADD CONSTRAINT links_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: locations locations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.locations
     ADD CONSTRAINT locations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: page_sources page_sources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.page_sources
+    ADD CONSTRAINT page_sources_pkey PRIMARY KEY (id);
 
 
 --
@@ -584,6 +729,20 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.words
     ADD CONSTRAINT words_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_account_sources_on_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_account_sources_on_account_id ON public.account_sources USING btree (account_id);
+
+
+--
+-- Name: index_account_sources_on_source_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_account_sources_on_source_id ON public.account_sources USING btree (source_id);
 
 
 --
@@ -636,6 +795,20 @@ CREATE INDEX index_hydrations_on_page_id ON public.hydrations USING btree (page_
 
 
 --
+-- Name: index_links_on_destination_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_links_on_destination_id ON public.links USING btree (destination_id);
+
+
+--
+-- Name: index_links_on_origin_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_links_on_origin_id ON public.links USING btree (origin_id);
+
+
+--
 -- Name: index_locations_on_page_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -657,6 +830,20 @@ CREATE INDEX index_locations_on_word_id ON public.locations USING btree (word_id
 
 
 --
+-- Name: index_page_sources_on_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_page_sources_on_account_id ON public.page_sources USING btree (account_id);
+
+
+--
+-- Name: index_page_sources_on_source_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_page_sources_on_source_id ON public.page_sources USING btree (source_id);
+
+
+--
 -- Name: index_profiles_on_account_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -671,10 +858,10 @@ CREATE INDEX index_sources_on_account_id ON public.sources USING btree (account_
 
 
 --
--- Name: index_sources_on_page_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_sources_on_sourceable; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_sources_on_page_id ON public.sources USING btree (page_id);
+CREATE INDEX index_sources_on_sourceable ON public.sources USING btree (sourceable_type, sourceable_id);
 
 
 --
@@ -699,6 +886,14 @@ CREATE INDEX index_words_on_searchable ON public.words USING gin (searchable);
 
 
 --
+-- Name: page_sources fk_rails_1701058d23; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.page_sources
+    ADD CONSTRAINT fk_rails_1701058d23 FOREIGN KEY (source_id) REFERENCES public.pages(id);
+
+
+--
 -- Name: hydrations fk_rails_2fb8ab0efb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -720,6 +915,22 @@ ALTER TABLE ONLY public.locations
 
 ALTER TABLE ONLY public.locations
     ADD CONSTRAINT fk_rails_71081a738a FOREIGN KEY (word_id) REFERENCES public.words(id);
+
+
+--
+-- Name: account_sources fk_rails_840b48e9ae; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account_sources
+    ADD CONSTRAINT fk_rails_840b48e9ae FOREIGN KEY (account_id) REFERENCES public.accounts(id);
+
+
+--
+-- Name: page_sources fk_rails_8828d61eb2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.page_sources
+    ADD CONSTRAINT fk_rails_8828d61eb2 FOREIGN KEY (account_id) REFERENCES public.accounts(id);
 
 
 --
@@ -755,11 +966,27 @@ ALTER TABLE ONLY public.active_storage_attachments
 
 
 --
--- Name: sources fk_rails_edb3ed3b7d; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: account_sources fk_rails_c7cc0e7fc4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.sources
-    ADD CONSTRAINT fk_rails_edb3ed3b7d FOREIGN KEY (page_id) REFERENCES public.pages(id);
+ALTER TABLE ONLY public.account_sources
+    ADD CONSTRAINT fk_rails_c7cc0e7fc4 FOREIGN KEY (source_id) REFERENCES public.accounts(id);
+
+
+--
+-- Name: links fk_rails_e7292bebdf; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.links
+    ADD CONSTRAINT fk_rails_e7292bebdf FOREIGN KEY (destination_id) REFERENCES public.pages(id);
+
+
+--
+-- Name: links fk_rails_ed527f1c10; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.links
+    ADD CONSTRAINT fk_rails_ed527f1c10 FOREIGN KEY (origin_id) REFERENCES public.pages(id);
 
 
 --
@@ -787,6 +1014,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220209195657'),
 ('20220210165926'),
 ('20220210170155'),
-('20220214143944');
+('20220217171016'),
+('20220217203034'),
+('20220217203043'),
+('20220217204708');
 
 

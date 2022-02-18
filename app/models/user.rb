@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-
-STRICT_PASSWORD_FORMAT = /\A
+class User < ApplicationRecord
+  STRICT_PASSWORD_FORMAT = /\A
   (?=.{8,})          # Must contain 8 or more characters
   (?=.*\d)           # Must contain a digit
   (?=.*[a-z])        # Must contain a lower case character
@@ -8,11 +8,9 @@ STRICT_PASSWORD_FORMAT = /\A
   (?=.*[[:^alnum:]]) # Must contain a symbol
 /x
 
-LENIENT_PASSWORD_FORMAT = /\A
+  LENIENT_PASSWORD_FORMAT = /\A
   (?=.{8,})          # Must contain 8 or more characters
 /x
-
-class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 

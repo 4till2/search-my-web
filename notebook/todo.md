@@ -1,10 +1,10 @@
 # TODO
-- [ ] page user join
-- [ ] background jobs
+- [x] page user join
+- [x] background jobs
 - [ ] improve hydration
 - [ ] improve search algorithm
 - [ ] Views
-    - [ ] upload
+    - [x] upload
     - [ ] manage pages
-    - [ ] search
+    - [x] search
 - [ ] bookmark page to account
