@@ -14,39 +14,6 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: account_sources; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.account_sources (
-    id bigint NOT NULL,
-    account_id bigint NOT NULL,
-    source_id bigint NOT NULL,
-    rank integer DEFAULT 1,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: account_sources_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.account_sources_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: account_sources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.account_sources_id_seq OWNED BY public.account_sources.id;
-
-
---
 -- Name: accounts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -190,47 +157,6 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
--- Name: hydrations; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.hydrations (
-    id bigint NOT NULL,
-    page_id bigint NOT NULL,
-    title character varying,
-    summary text,
-    author character varying,
-    date_published timestamp(6) without time zone,
-    lead_image_url character varying,
-    content text,
-    domain character varying,
-    excerpt text,
-    word_count integer,
-    direction character varying,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: hydrations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.hydrations_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: hydrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.hydrations_id_seq OWNED BY public.hydrations.id;
-
-
---
 -- Name: links; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -263,72 +189,6 @@ ALTER SEQUENCE public.links_id_seq OWNED BY public.links.id;
 
 
 --
--- Name: locations; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.locations (
-    id bigint NOT NULL,
-    "position" integer,
-    page_id bigint NOT NULL,
-    word_id bigint NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: locations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.locations_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: locations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.locations_id_seq OWNED BY public.locations.id;
-
-
---
--- Name: page_sources; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.page_sources (
-    id bigint NOT NULL,
-    account_id bigint NOT NULL,
-    source_id bigint NOT NULL,
-    rank integer DEFAULT 1,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: page_sources_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.page_sources_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: page_sources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.page_sources_id_seq OWNED BY public.page_sources.id;
-
-
---
 -- Name: pages; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -336,9 +196,19 @@ CREATE TABLE public.pages (
     id bigint NOT NULL,
     url character varying,
     last_indexed timestamp(6) without time zone,
-    rank integer DEFAULT 1,
+    title character varying,
+    summary text,
+    author character varying,
+    date_published timestamp(6) without time zone,
+    lead_image_url character varying,
+    content text,
+    domain character varying,
+    excerpt text,
+    word_count integer,
+    direction character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    searchable tsvector GENERATED ALWAYS AS ((((setweight(to_tsvector('english'::regconfig, (COALESCE(url, ''::character varying))::text), 'A'::"char") || setweight(to_tsvector('english'::regconfig, (COALESCE(title, ''::character varying))::text), 'A'::"char")) || setweight(to_tsvector('english'::regconfig, COALESCE(summary, ''::text)), 'B'::"char")) || setweight(to_tsvector('english'::regconfig, COALESCE(content, ''::text)), 'C'::"char"))) STORED
 );
 
 
@@ -474,45 +344,6 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: words; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.words (
-    id bigint NOT NULL,
-    stem character varying,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    searchable tsvector GENERATED ALWAYS AS (to_tsvector('simple'::regconfig, (COALESCE(stem, ''::character varying))::text)) STORED
-);
-
-
---
--- Name: words_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.words_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: words_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.words_id_seq OWNED BY public.words.id;
-
-
---
--- Name: account_sources id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.account_sources ALTER COLUMN id SET DEFAULT nextval('public.account_sources_id_seq'::regclass);
-
-
---
 -- Name: accounts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -541,31 +372,10 @@ ALTER TABLE ONLY public.active_storage_variant_records ALTER COLUMN id SET DEFAU
 
 
 --
--- Name: hydrations id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.hydrations ALTER COLUMN id SET DEFAULT nextval('public.hydrations_id_seq'::regclass);
-
-
---
 -- Name: links id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.links ALTER COLUMN id SET DEFAULT nextval('public.links_id_seq'::regclass);
-
-
---
--- Name: locations id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.locations ALTER COLUMN id SET DEFAULT nextval('public.locations_id_seq'::regclass);
-
-
---
--- Name: page_sources id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.page_sources ALTER COLUMN id SET DEFAULT nextval('public.page_sources_id_seq'::regclass);
 
 
 --
@@ -594,21 +404,6 @@ ALTER TABLE ONLY public.sources ALTER COLUMN id SET DEFAULT nextval('public.sour
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
-
-
---
--- Name: words id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.words ALTER COLUMN id SET DEFAULT nextval('public.words_id_seq'::regclass);
-
-
---
--- Name: account_sources account_sources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.account_sources
-    ADD CONSTRAINT account_sources_pkey PRIMARY KEY (id);
 
 
 --
@@ -652,35 +447,11 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
--- Name: hydrations hydrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.hydrations
-    ADD CONSTRAINT hydrations_pkey PRIMARY KEY (id);
-
-
---
 -- Name: links links_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.links
     ADD CONSTRAINT links_pkey PRIMARY KEY (id);
-
-
---
--- Name: locations locations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.locations
-    ADD CONSTRAINT locations_pkey PRIMARY KEY (id);
-
-
---
--- Name: page_sources page_sources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.page_sources
-    ADD CONSTRAINT page_sources_pkey PRIMARY KEY (id);
 
 
 --
@@ -721,28 +492,6 @@ ALTER TABLE ONLY public.sources
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
-
-
---
--- Name: words words_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.words
-    ADD CONSTRAINT words_pkey PRIMARY KEY (id);
-
-
---
--- Name: index_account_sources_on_account_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_account_sources_on_account_id ON public.account_sources USING btree (account_id);
-
-
---
--- Name: index_account_sources_on_source_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_account_sources_on_source_id ON public.account_sources USING btree (source_id);
 
 
 --
@@ -788,13 +537,6 @@ CREATE UNIQUE INDEX index_active_storage_variant_records_uniqueness ON public.ac
 
 
 --
--- Name: index_hydrations_on_page_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_hydrations_on_page_id ON public.hydrations USING btree (page_id);
-
-
---
 -- Name: index_links_on_destination_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -809,38 +551,10 @@ CREATE INDEX index_links_on_origin_id ON public.links USING btree (origin_id);
 
 
 --
--- Name: index_locations_on_page_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_pages_on_searchable; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_locations_on_page_id ON public.locations USING btree (page_id);
-
-
---
--- Name: index_locations_on_page_id_and_word_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_locations_on_page_id_and_word_id ON public.locations USING btree (page_id, word_id);
-
-
---
--- Name: index_locations_on_word_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_locations_on_word_id ON public.locations USING btree (word_id);
-
-
---
--- Name: index_page_sources_on_account_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_page_sources_on_account_id ON public.page_sources USING btree (account_id);
-
-
---
--- Name: index_page_sources_on_source_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_page_sources_on_source_id ON public.page_sources USING btree (source_id);
+CREATE INDEX index_pages_on_searchable ON public.pages USING gin (searchable);
 
 
 --
@@ -879,61 +593,6 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING bt
 
 
 --
--- Name: index_words_on_searchable; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_words_on_searchable ON public.words USING gin (searchable);
-
-
---
--- Name: page_sources fk_rails_1701058d23; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.page_sources
-    ADD CONSTRAINT fk_rails_1701058d23 FOREIGN KEY (source_id) REFERENCES public.pages(id);
-
-
---
--- Name: hydrations fk_rails_2fb8ab0efb; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.hydrations
-    ADD CONSTRAINT fk_rails_2fb8ab0efb FOREIGN KEY (page_id) REFERENCES public.pages(id);
-
-
---
--- Name: locations fk_rails_487120e22d; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.locations
-    ADD CONSTRAINT fk_rails_487120e22d FOREIGN KEY (page_id) REFERENCES public.pages(id);
-
-
---
--- Name: locations fk_rails_71081a738a; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.locations
-    ADD CONSTRAINT fk_rails_71081a738a FOREIGN KEY (word_id) REFERENCES public.words(id);
-
-
---
--- Name: account_sources fk_rails_840b48e9ae; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.account_sources
-    ADD CONSTRAINT fk_rails_840b48e9ae FOREIGN KEY (account_id) REFERENCES public.accounts(id);
-
-
---
--- Name: page_sources fk_rails_8828d61eb2; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.page_sources
-    ADD CONSTRAINT fk_rails_8828d61eb2 FOREIGN KEY (account_id) REFERENCES public.accounts(id);
-
-
---
 -- Name: active_storage_variant_records fk_rails_993965df05; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -963,14 +622,6 @@ ALTER TABLE ONLY public.accounts
 
 ALTER TABLE ONLY public.active_storage_attachments
     ADD CONSTRAINT fk_rails_c3b3935057 FOREIGN KEY (blob_id) REFERENCES public.active_storage_blobs(id);
-
-
---
--- Name: account_sources fk_rails_c7cc0e7fc4; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.account_sources
-    ADD CONSTRAINT fk_rails_c7cc0e7fc4 FOREIGN KEY (source_id) REFERENCES public.accounts(id);
 
 
 --
@@ -1009,14 +660,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220105005556'),
 ('20220105010506'),
 ('20220209190448'),
-('20220209190834'),
-('20220209190935'),
-('20220209195657'),
-('20220210165926'),
-('20220210170155'),
 ('20220217171016'),
-('20220217203034'),
-('20220217203043'),
-('20220217204708');
+('20220217204708'),
+('20220218220430'),
+('20220218220445');
 
 

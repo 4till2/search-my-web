@@ -1,16 +1,16 @@
 class Page < ApplicationRecord
+  include PgSearch::Model
+  include LinkHelpers
+
   FRESHNESS_POLICY = 60 * 60 * 24 * 7 # 7 days
-  has_one :hydration, dependent: :destroy
-  has_many :locations, dependent: :destroy
-  has_many :words, through: :locations
   # This page is a source for another
-  has_many :sourcers, class_name: 'Source', as: :sourceable
+  has_many :sourcers, class_name: 'Source', as: :sourceable, dependent: :destroy, inverse_of: :sourceable
   has_many :sorcerer_accounts, through: :sourcers, source: 'account'
 
   # Get links where this page is the origin
-  has_many :links_as_origin, class_name: 'Link', foreign_key: 'origin_id', inverse_of: 'origin'
+  has_many :links_as_origin, class_name: 'Link', foreign_key: 'origin_id', inverse_of: 'origin', dependent: :destroy
   # Get links where this page is the destination
-  has_many :links_as_destination, class_name: 'Link', foreign_key: 'destination_id', inverse_of: 'destination'
+  has_many :links_as_destination, class_name: 'Link', foreign_key: 'destination_id', inverse_of: 'destination', dependent: :destroy
 
   # Get pages referencing this page
   has_many :origin_pages, through: :links_as_destination, class_name: 'Page', source: 'origin'
@@ -19,20 +19,23 @@ class Page < ApplicationRecord
 
   validates :url, presence: true
   validate do
-    errors.add(:base, 'Url is invalid') unless url.valid_url?
+    errors.add(:base, 'Url is invalid') unless url&.valid_url?
   end
   validates_uniqueness_of :url
 
-  def self.find_or_create(url)
-    page = find_by(url: url)
-    page = new(url: url) if page.nil?
-    page
-  end
+  before_save :strip_params
 
-  def refresh
-    hydrate
-    touch
-  end
+  scope :hydrated, -> { where.not(last_indexed: nil) }
+
+  pg_search_scope :search_page,
+                  against: { url: 'A', title: 'A', summary: 'B', content: 'C' },
+                  using: {
+                    tsearch: {
+                      dictionary: 'english', tsvector_column: 'searchable'
+                    }
+                  }
+
+  @raw_html = nil
 
   def age
     return nil unless last_indexed
@@ -44,20 +47,49 @@ class Page < ApplicationRecord
     age && age <= FRESHNESS_POLICY
   end
 
-  def hydrate
-    if hydration.present?
-      hydration.refresh
-    elsif id
-      self.hydration = Hydration.create(page: self)
-    else
-      raise StandardError, 'Save page before hydrating.'
-    end
+  def stale?
+    !fresh?
+  end
+
+  def hydrate(force = false)
+    return if fresh? && !force
+
+    self.last_indexed = DateTime.now if pour
+    save && build_links(@raw_html)
+  end
+
+  def hydrate_async(force = false)
+    HydrationJob.perform_async(id, force)
   end
 
   private
 
-  def build_associated
-    hydrate unless hydration.present?
+  def strip_params
+    self.url = url.split('?').first
+  end
+
+  def build_links(html)
+    Nokogiri::HTML(html)&.css('a')&.map { |link| Link.add_with_url(url, link['href']) }
+  end
+
+  private
+
+  def pour
+    return unless url.present?
+
+    p = Services::PageParser.new(url)
+    self.title = p.title
+    self.summary = p.summary
+    self.author = p.author
+    self.date_published = p.date_published
+    self.lead_image_url = p.lead_image_url
+    self.content = Formatters::Html.clean_text(p.content)
+    self.domain = p.domain
+    self.excerpt = p.excerpt
+    self.word_count = p.word_count
+    self.direction = p.direction
+
+    @raw_html = p.content
   end
 
 end

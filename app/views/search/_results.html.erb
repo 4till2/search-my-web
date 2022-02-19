@@ -1,5 +1,5 @@
 <%= turbo_frame_tag 'results' do %>
-  <% query ||= nil && results ||= nil %>
+  <% query ||= nil && results ||= nil && pagy ||= nil%>
 
   <% if results.present? %>
     <% results.each do |result| %>
@@ -9,5 +9,10 @@
     <% end %>
   <% elsif query.present? %>
     <div class="mx-auto p-12 text-gray-500 font-bold">No Results</div>
+  <% end %>
+  <% if pagy.present? %>
+    <div class="mx-auto text-center mb-4" >
+      <%== render 'shared/pagy_nav', pagy: pagy %>
+    </div>
   <% end %>
 <% end %>

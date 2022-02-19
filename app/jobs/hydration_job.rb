@@ -1,10 +1,9 @@
-class IndexJob
+class HydrationJob
   include Sidekiq::Job
   queue_as :default
 
-  def perform(url, account_id)
-    index = Indexer.new.process(url)
-    Source.create(account_id: account_id, sourceable: index[:page]) if account_id && index[:page]
+  def perform(page_id, force = false)
+    Page.find(page_id).hydrate(force)
 
     clear_retries if ENV.fetch('RAILS_ENV', 'development') == 'development'
   end

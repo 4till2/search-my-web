@@ -60,6 +60,7 @@ group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem 'web-console'
 
+  gem 'faker'
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
 
@@ -83,4 +84,4 @@ gem 'figaro' # ENV configuration : https://github.com/laserlemon/figaro
 gem 'httparty' # make http requests : https://github.com/jnunemaker/httparty
 gem 'pg_search'
 gem 'sidekiq', '>= 6.4.1'
-gem 'sidekiq-batch'
+gem 'pagy', '~> 5.9'

@@ -1,6 +1,5 @@
 module LinkHelpers
   DO_NOT_CRAWL_TYPES = %w[.pdf .doc .xls .ppt .mp3 .m4v .avi .mpg .rss .xml .json .txt .git .zip .md5 .asc .jpg .gif .png].freeze
-
   extend ActiveSupport::Concern
 
   # scrub the given link
