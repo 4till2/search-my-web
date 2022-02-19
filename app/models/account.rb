@@ -3,7 +3,7 @@ class Account < ApplicationRecord
   has_one :profile, dependent: :destroy
   has_many :sources
   # This is a source for another
-  has_many :sourcers, class_name: 'Source', as: :sourceable
+  has_many :sourcers, class_name: 'Source', as: :sourceable, dependent: :destroy, inverse_of: :sourceable
   has_many :sorcerer_accounts, through: :sourcers, source: 'account'
 
   after_create_commit :build_associated

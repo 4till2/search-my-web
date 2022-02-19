@@ -19,15 +19,7 @@ class IndexerTest < ActiveSupport::TestCase
     indexer = Indexer.new
     page = indexer.process(@url)[:page]
     assert page
-    assert page.hydration
-    assert page.hydration.content.present?
-  end
-
-  test 'process one url with hydration and words' do
-    indexer = Indexer.new
-    assert_difference 'Word.count', 12 do
-      indexer.process(@url)
-    end
+    assert page.content.present?
   end
 
   test 'dont process if already indexed' do

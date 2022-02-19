@@ -1,4 +1,4 @@
-# WORK IN PROGRESS
+# NOT IN USE // WORK IN PROGRESS
 # This class is all experimental as of now.
 # Will rank individual pages, and accounts according to the networks trust.
 class Ranker

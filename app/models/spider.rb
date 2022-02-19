@@ -1,7 +1,7 @@
-LAST_CRAWLED_PAGES = 'seed.yml'
-USER_AGENT = 'myweb'
-
+# NOT IN USE
 class Spider
+  LAST_CRAWLED_PAGES = 'seed.yml'
+  USER_AGENT = 'myweb'
   include LinkHelpers
 
   # start the spider
@@ -20,7 +20,7 @@ class Spider
           if page.present?
             uri = URI.parse(page_url)
             host = "#{uri.scheme}://#{uri.host}"
-            doc = page.hydration.content
+            doc = page.content
             doc.find('a').each do |link|
               url = scrub(link['href'], host)
               newfound_pages << url unless url.nil? || newfound_pages.include?(url) # || !robot.allowed?(url)

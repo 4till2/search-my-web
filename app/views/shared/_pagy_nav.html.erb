@@ -1,0 +1,20 @@
+<% link = pagy_link_proc(pagy) -%>
+<nav aria-label="pager" class="flex mx-auto justify-center align-center items-center overflow-hidden" role="navigation">
+  <% if pagy.prev -%>
+    <span class="page text-gray-500 prev"><%== link.call(pagy.prev, pagy_t('pagy.nav.prev'), 'aria-label="previous"') %></span>
+  <% else -%>  <span class="page prev text-gray-300 disabled"><%== pagy_t('pagy.nav.prev') %></span>
+  <% end -%>
+  <% pagy.series.each do |item|
+    # series example: [1, :gap, 7, 8, "9", 10, 11, :gap, 36]        -%>
+    <% if item.is_a?(Integer) -%>
+      <div class="rounded-full  text-gray-300 overflow-hidden mx-2"><%== link.call(item) %></div>
+    <% elsif item.is_a?(String) -%>
+      <div class=" rounded-full text-gray-500 overflow-hidden mx-2"><%= item %></div>
+    <% elsif item == :gap -%>  <span class="page gap"><%== pagy_t('pagy.nav.gap') %></span>
+    <% end -%>
+  <% end -%>
+  <% if pagy.next -%>
+    <span class="page next text-gray-500"><%== link.call(pagy.next, pagy_t('pagy.nav.next'), 'aria-label="next"') %></span>
+  <% else -%>  <span class="page next text-gray-300 disabled"><%== pagy_t('pagy.nav.next') %></span>
+  <% end -%>
+</nav>
