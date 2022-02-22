@@ -1,5 +1,5 @@
 def create_page
-  Page.create! url: "https://#{SecureRandom.alphanumeric(5)}.com"
+  Page.create! url: "https://ieftimov.com/post/how-to-make-the-step-up-from-intermediate-to-senior-engineer/"
 end
 
 def create_source(account, s)

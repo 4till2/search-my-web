@@ -1,7 +1,31 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
 one:
-  url: https://mysite.com
-
+  url: https://example.com
+  last_indexed: Tue, 22 Feb 2022 01:33:15.712300000 UTC +00:00
+  title: Example Domain
+  summary: This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission. More information...
+  author: Yosef Serkez
+  date_published: Sat, 19 Feb 2022 23:15:33.000000000 UTC +00:00
+  lead_image_url: https://unsplash.com/photos/fnqIr4uRVUQ
+  content: This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission. More information...
+  domain: example.com
+  excerpt: This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission. More information...
+  word_count: 26
+  direction: ltr
+  created_at: Tue, 22 Feb 2022 01:33:08.519516000 UTC +00:00
+  updated_at: Tue, 22 Feb 2022 01:33:15.713358000 UTC +00:00
 two:
-  url: https://mysite.com
+  url: https://other.com
+  last_indexed: Tue, 22 Feb 2022 01:33:15.712300000 UTC +00:00
+  title: Second Domain
+  summary: This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission. More information...
+  author: Yosef Serkez
+  date_published: Sat, 19 Feb 2022 23:15:33.000000000 UTC +00:00
+  lead_image_url: https://unsplash.com/photos/fnqIr4uRVUQ
+  content: This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission. More information...
+  domain: other.com
+  excerpt: This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission. More information...
+  word_count: 26
+  direction: ltr
+  created_at: Tue, 22 Feb 2022 01:33:08.519516000 UTC +00:00
+  updated_at: Tue, 22 Feb 2022 01:33:15.713358000 UTC +00:00

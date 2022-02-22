@@ -5,7 +5,7 @@ class Page < ApplicationRecord
   FRESHNESS_POLICY = 60 * 60 * 24 * 7 # 7 days
   # This page is a source for another
   has_many :sourcers, class_name: 'Source', as: :sourceable, dependent: :destroy, inverse_of: :sourceable
-  has_many :sorcerer_accounts, through: :sourcers, source: 'account'
+  has_many :sourcer_accounts, through: :sourcers, source: 'account'
 
   # Get links where this page is the origin
   has_many :links_as_origin, class_name: 'Link', foreign_key: 'origin_id', inverse_of: 'origin', dependent: :destroy
@@ -27,13 +27,22 @@ class Page < ApplicationRecord
 
   scope :hydrated, -> { where.not(last_indexed: nil) }
 
-  pg_search_scope :search_page,
+  pg_search_scope :search,
                   against: { url: 'A', title: 'A', summary: 'B', content: 'C' },
                   using: {
                     tsearch: {
                       dictionary: 'english', tsvector_column: 'searchable'
                     }
                   }
+
+  pg_search_scope :search_by, lambda { |page_part, query, *options|
+    raise ArgumentError unless %i[url title content author].include?(page_part)
+
+    {
+      against: page_part,
+      query: query
+    }
+  }
 
   @raw_html = nil
 
@@ -55,21 +64,21 @@ class Page < ApplicationRecord
     return if fresh? && !force
 
     self.last_indexed = DateTime.now if pour
-    save && build_links(@raw_html)
+    save
+  end
+
+  # @note to be chained after hydrate only
+  def build_links
+    return unless @raw_html
+
+    Nokogiri::HTML(@raw_html)&.css('a')&.map do |link|
+      href = link['href']
+      Link.add_with_url(url, link['href']) unless href.include?(domain) # Dont link to same domain
+    end
   end
 
   def hydrate_async(force = false)
     HydrationJob.perform_async(id, force)
-  end
-
-  private
-
-  def strip_params
-    self.url = url.split('?').first
-  end
-
-  def build_links(html)
-    Nokogiri::HTML(html)&.css('a')&.map { |link| Link.add_with_url(url, link['href']) }
   end
 
   private
@@ -90,6 +99,11 @@ class Page < ApplicationRecord
     self.direction = p.direction
 
     @raw_html = p.content
+  end
+
+  # @todo: get rid of www.
+  def strip_params
+    self.url = url.split('?').first
   end
 
 end
