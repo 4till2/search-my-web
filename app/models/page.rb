@@ -26,6 +26,7 @@ class Page < ApplicationRecord
   before_save :strip_params
 
   scope :hydrated, -> { where.not(last_indexed: nil) }
+  scope :in_source, ->(ids) { where(sourcers: ids) }
 
   pg_search_scope :search,
                   against: { url: 'A', title: 'A', summary: 'B', content: 'C' },
@@ -34,6 +35,9 @@ class Page < ApplicationRecord
                       dictionary: 'english', tsvector_column: 'searchable'
                     }
                   }
+  pg_search_scope :sourcer_search, associated_against: {
+    sourcers: :ids
+  }
 
   pg_search_scope :search_by, lambda { |page_part, query, *options|
     raise ArgumentError unless %i[url title content author].include?(page_part)

@@ -21,6 +21,21 @@ class Account < ApplicationRecord
   validates :nickname, length: { minimum: 4, maximum: 12, message: 'must be between 4 and 12 characters.' }
   validates :nickname, format: { with: /\A\w+\Z/, message: "can only contain letters, numbers and underscores." }
 
+  def source_label_names
+    ActsAsTaggableOn::Tag.for_tenant(id)
+  end
+
+  # @param names a tag or array of tags to match
+  # @param any match any of the tags. Defaults to true. False will only match all tags
+  # @param exclude exclude the provided tags
+  # @param wild look for %tag% as partial match
+  # @return matching sources or all sources if names is empty
+  def source_labels(*names, any: true, exclude: false, wild: false)
+    return sources unless names
+
+    sources.tagged_with(names.flatten, any: any, exclude: exclude, wild: wild)
+  end
+
   private
 
   def build_associated

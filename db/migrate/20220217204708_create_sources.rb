@@ -5,7 +5,6 @@ class CreateSources < ActiveRecord::Migration[7.0]
       t.references :sourceable, null: false, polymorphic: true
       t.integer :rank, default: 1
       t.string :name
-      t.string :group
       t.timestamps
     end
   end
