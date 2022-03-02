@@ -9,9 +9,9 @@ class SearchController < ApplicationController
     query = params[:query]
     preload = params[:preload] == 'true'
     if query.present?
-      pagy, results = pagy(Finder.search(query, current_account), items: params[:limit]&.to_i&.positive?)
+      pagy, results = pagy(Finder.new(query, account: current_account).search, items: params[:limit]&.to_i&.positive?)
     elsif preload
-      pagy, results = pagy(Finder.search(query, current_account), items: params[:limit]&.to_i&.positive? || 10)
+      pagy, results = pagy(Finder.new(query, account: current_account).search, items: params[:limit]&.to_i&.positive? || 10)
     end
 
     # Preload with sources if preload set to true and query is empty
