@@ -8,7 +8,7 @@ export default class extends Controller {
 
     connect() {
         this.moveCursorToEnd(this.inputTarget) // Focus input at end of query if present.
-        this.inputTarget.oninput = debounce(() => this.formTarget.requestSubmit(), 500)
+        // this.inputTarget.oninput = debounce(() => this.formTarget.requestSubmit(), 500)
     }
 
     reset() {

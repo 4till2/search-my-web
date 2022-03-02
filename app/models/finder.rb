@@ -56,10 +56,14 @@ class Finder
     @scope[:source] ||= extract(:source)
   end
 
-  def source_ids(sources)
+  def source_ids(sources, flags: { pages: true, deep: false })
     return unless @account
 
-    @account.source_labels(sources).ids
+    if flags[:pages]
+      @account.source_labels(sources).pages.ids
+    else
+      @account.source_labels(sources).map { |source| source._sources(deep: flags[:deep]) }.map(&:id)
+    end
   end
 
   private
