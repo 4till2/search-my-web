@@ -63,8 +63,8 @@ class Finder
 
   def chain_filter_options(chain)
     chain.where({
-                  **format_for_db(:author, authors),
-                  **format_for_db(:domain, domains)
+                  **format_for_db(:author, @input.authors),
+                  **format_for_db(:domain, @input.domains)
                 })
   end
 

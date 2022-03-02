@@ -7,7 +7,7 @@ class SourcesController < ApplicationController
   end
 
   def import
-    urls = params[:urls].gsub(/\s+/, "").split(/\r?\n|\r\n?|,/)
+    urls = params[:urls].split(/\r?\n|\r\n?|,/)
     imp = Importer.new(urls, current_account)
     imp.run
     #  do something with the resulting successful and failed indices
