@@ -1,0 +1,24 @@
+<nav aria-label="pager" class="flex mx-auto justify-center align-center items-center overflow-hidden" role="navigation">
+  <% nav[:total_pages].times do |p| %>
+    <%
+      page = p + 1
+      page_offset = page - nav[:current_page].to_i
+      offset_direction = page_offset > 0 ? :+ : :-
+      offset = if page_offset == 0
+                 0
+               else
+                 (nav[:offset] || 0).public_send(offset_direction, (nav[:limit] || 0) * page_offset.abs)
+               end
+    %>
+    <div class="p-2">
+      <% if page_offset == 0 %>
+        <span class="bold font-bold"><%= page %></span>
+      <% else %>
+        <%= button_to location, params: { **params, page: page, offset: offset, limit: nav[:limit] } do %>
+          <span><%= page %></span>
+        <% end %>
+      <% end %>
+    </div>
+
+  <% end %>
+</nav>

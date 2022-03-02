@@ -84,5 +84,4 @@ gem 'figaro' # ENV configuration : https://github.com/laserlemon/figaro
 gem 'httparty' # make http requests : https://github.com/jnunemaker/httparty
 gem 'pg_search'
 gem 'sidekiq', '>= 6.4.1'
-gem 'pagy', '~> 5.9'
 gem 'acts-as-taggable-on', '~> 9.0' # tagging for source collections and pages :  https://github.com/mbleigh/acts-as-taggable-on/tree/v9.0.1

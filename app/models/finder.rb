@@ -16,16 +16,29 @@ class Finder
 
   # Search by query, with the option to limit the search to a subset of sources, authors, and domains
   # sources are user provided by label and converted to their respective id. 
-  def search
+  def search(paginate = nil)
     return unless @input
 
     Page.try { |p| sources ? chain_source_options(p) : p }
         .search(query)
         .try { |p| authors || domains ? chain_filter_options(p) : p }
+        .try { |p| paginate.present? ? paginate(p, paginate) : p }
   end
 
   def query
     clean_input
+  end
+
+  def paginate(collection, options)
+    offset = options[:offset] || 0
+    limit = options[:limit] || 10
+    results = collection.offset(offset).limit(limit)
+    nav = { offset: offset,
+            limit: limit,
+            total_results: results.count,
+            total_pages: collection.count / (limit || 1) + (collection.count % (limit || 1) ? 1 : 0),
+            current_page: (collection.count / (limit || 1) - ((collection.count - offset) / limit)) + 1 }
+    [nav, results]
   end
 
   # Will return a regex for extracting a provided scope
@@ -60,8 +73,10 @@ class Finder
     return unless @account
 
     if flags[:pages]
+      # Just top level sources
       @account.source_labels(sources).pages.ids
     else
+      # Top level sources and their sources (deep indicates ad infinitum)
       @account.source_labels(sources).map { |source| source._sources(deep: flags[:deep]) }.map(&:id)
     end
   end

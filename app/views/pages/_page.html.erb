@@ -17,23 +17,23 @@
         </div>
       </div>
     <% end %>
-    <div class="mt-4">
-      <div class="flex items-center">
-        <div class="">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-400 hover:text-indigo-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-        </div>
-        <div class="flex ml-2  overflow-hidden -space-x-1">
-          <% page.sourcer_accounts.first(5).each do |a| %>
-            <% if a.profile.avatar.attached? %>
-              <%= image_tag a.profile.avatar, class: 'inline-block h-6 w-6 rounded-full ring-2 ring-white' %>
-            <% else %>
-              <div class="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-gray-100"><%= a.nickname[0] %></div>
-            <% end %>
-          <% end %>
-        </div>
-      </div>
-    </div>
+<!--    <div class="mt-4">-->
+<!--      <div class="flex items-center">-->
+<!--        <div class="">-->
+<!--          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-400 hover:text-indigo-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
+<!--            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>-->
+<!--          </svg>-->
+<!--        </div>-->
+<!--        <div class="flex ml-2  overflow-hidden -space-x-1">-->
+          <%# page.sourcer_accounts.first(5).each do |a| %>
+            <%# if a.profile.avatar.attached? %>
+              <%#= image_tag a.profile.avatar, class: 'inline-block h-6 w-6 rounded-full ring-2 ring-white' %>
+            <%# else %>
+<!--              <div class="inline-block h-6 w-6 rounded-full ring-2 ring-white bg-gray-100"><%#= a.nickname[0] %></div>-->
+            <%# end %>
+          <%# end %>
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
 </li>
