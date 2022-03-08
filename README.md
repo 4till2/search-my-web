@@ -26,3 +26,7 @@ suite of passing tests, upon which I will write a days summary outlining key pro
 Follow along with the daily updates in the [journal](notebook/journal).
 
 Find key decisions in the [logbook](notebook/logbook.md)
+
+
+# Deploy
+1. Create Extract environment variables (host, user, password), with matching  user and password in extract service (vercel environment variable).

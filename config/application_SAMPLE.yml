@@ -1,0 +1,6 @@
+EXTRACT_USER: 'USER_HELLO'
+EXTRACT_SECRET: 'password'
+EXTRACT_HOST: 'localhost'
+EXTRACT_PORT: '4000'
+FORCE_SSL: 'false'
+

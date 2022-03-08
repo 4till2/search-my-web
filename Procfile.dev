@@ -1,2 +1,3 @@
 web: bin/rails server -p 3000
+service: bundle exec sidekiq
 css: rails tailwindcss:watch
